@@ -1,0 +1,52 @@
+# ==============================================
+# Unreal Engine 自动生成文件（必须忽略）
+# ==============================================
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+Platforms/
+
+# IDE 缓存文件（Rider + Visual Studio）
+.vs/
+.idea/
+*.suo
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.opendb
+*.iml
+
+# 编译输出文件
+*.dll
+*.exe
+*.lib
+*.log
+*.sln
+
+# ==============================================
+# 大型商城资源包 → 绝对不上传 GitHub
+# ==============================================
+Content/Fantastic_Village_Pack/
+Content/Medieval_Sewer_Dungeon/
+Content/ZombieFemale/
+Content/ZombieAnimationPack/
+Content/Coin_VFX/
+Content/Fab/
+Content/Realistic_Starter_VFX_Pack_Vol2/
+Content/ModularDungeon2/
+Content/Characters/
+Content/audio/
+Content/Sounds/
+Content/pick_bullet/
+Content/shoot_animation/
+
+# ==============================================
+# 未使用的 UE 默认模板 → 忽略
+# ==============================================
+Content/ThirdPerson/
+Content/StarterContent/
+Content/LevelPrototyping/
+Content/Developers/
+Content/Collections/
