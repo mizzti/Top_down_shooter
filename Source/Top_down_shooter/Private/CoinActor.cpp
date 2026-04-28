@@ -10,6 +10,8 @@ ACoinActor::ACoinActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	// SetActorTickEnabled(false);  // 初始状态：关闭
+	
 	// 创建组件时机：构造函数
 	// 碰撞组件
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComp"));
@@ -36,6 +38,12 @@ void ACoinActor::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("[CoinActor] BeginPlay - RotationSpeed: %.1f"), RotationSpeed);
 	UE_LOG(LogTemp, Warning, TEXT("CoinValue: %d"), CoinValue);
 	PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	
+	// if (CollisionComp)
+	// {
+	// 	CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &ACoinActor::OnOverlapBegin);
+	// 	CollisionComp->OnComponentEndOverlap.AddDynamic(this, &ACoinActor::OnOverlapEnd);
+	// }
 }
 
 void ACoinActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -73,5 +81,23 @@ void ACoinActor::OnPickup_Implementation(AActor* Picker)
 	}
 	
 	Destroy();// 拾取后被销毁
+}
+
+void ACoinActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Overlap Begin: %s"), *OtherActor->GetName());
+	}
+}
+
+void ACoinActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Overlap End: %s"), *OtherActor->GetName());
+	}
 }
 

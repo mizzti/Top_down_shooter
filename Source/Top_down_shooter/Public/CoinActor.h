@@ -45,6 +45,19 @@ public:
 	
 	virtual void OnPickup_Implementation(AActor* Picker); // 代码使用
 	
+	// UFUNCTION()
+	// void OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
+	// 					AActor* OtherActor,
+	// 					UPrimitiveComponent* OtherComponent,
+	// 					int32 OtherBodyIndex,
+	// 					bool bFromSweep,
+	// 					const FHitResult& SweepResult);
+	//
+	// UFUNCTION()
+	// void OnOverlapEnd(UPrimitiveComponent* OverlappedComp,
+	// 				  AActor* OtherActor,
+	// 				  UPrimitiveComponent* OtherComponent,
+	// 				  int32 OtherBodyIndex);
 private:
 	// 存储旋转信息
 	UPROPERTY()
