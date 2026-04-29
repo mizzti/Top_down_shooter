@@ -24,15 +24,15 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	// 创建碰撞组件(作为RootCompnent)
+	// 创建碰撞组件(作为RootComponent)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USphereComponent* CollisionComp;
+	// 控制旋转的组件
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USphereComponent* RotationTriggerComp;
 	// 旋转速度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Coin")
 	float RotationSpeed = 90.0f;
-	// 旋转距离设置
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Coin")
-	float ActivateDistance = 300.0f;
 	// 创建网格组件
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* MeshComp;
@@ -45,21 +45,19 @@ public:
 	
 	virtual void OnPickup_Implementation(AActor* Picker); // 代码使用
 	
-	// UFUNCTION()
-	// void OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
-	// 					AActor* OtherActor,
-	// 					UPrimitiveComponent* OtherComponent,
-	// 					int32 OtherBodyIndex,
-	// 					bool bFromSweep,
-	// 					const FHitResult& SweepResult);
-	//
-	// UFUNCTION()
-	// void OnOverlapEnd(UPrimitiveComponent* OverlappedComp,
-	// 				  AActor* OtherActor,
-	// 				  UPrimitiveComponent* OtherComponent,
-	// 				  int32 OtherBodyIndex);
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
+						AActor* OtherActor,
+						UPrimitiveComponent* OtherComponent,
+						int32 OtherBodyIndex,
+						bool bFromSweep,
+						const FHitResult& SweepResult);
+	
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp,
+					  AActor* OtherActor,
+					  UPrimitiveComponent* OtherComponent,
+					  int32 OtherBodyIndex);
 private:
-	// 存储旋转信息
-	UPROPERTY()
-	APawn* PlayerPawn = nullptr;
+
 };
