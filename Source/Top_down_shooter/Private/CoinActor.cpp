@@ -19,6 +19,7 @@ ACoinActor::ACoinActor()
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComp"));
 	CollisionComp->SetSphereRadius(40.0f);
 	
+	CollisionComp->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	// 单独设置重叠响应
 	// 设置对象类型为 WorldDynamic
 	CollisionComp->SetCollisionObjectType(ECC_WorldDynamic);
@@ -35,6 +36,7 @@ ACoinActor::ACoinActor()
 	// 旋转组件
 	RotationTriggerComp = CreateDefaultSubobject<USphereComponent>(TEXT("RotationTriggerComp"));
 	RotationTriggerComp->SetSphereRadius(150.0f);
+	
 	// 单独设置重叠响应通道
 	RotationTriggerComp->SetCollisionObjectType(ECC_WorldDynamic);
 	RotationTriggerComp->SetCollisionResponseToAllChannels(ECR_Ignore);
@@ -84,7 +86,7 @@ void ACoinActor::Tick(float DeltaTime)
 
 void ACoinActor::OnPickup_Implementation(AActor* Picker)
 {
-	if (Picker)
+	if (Cast<APawn>(Picker))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("CoinActor: %s OnPickup函数被调用, value = %d"), *Picker->GetName(), CoinValue);
 		Destroy();// 拾取后被销毁
@@ -94,7 +96,7 @@ void ACoinActor::OnPickup_Implementation(AActor* Picker)
 void ACoinActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor && OtherActor != this && Cast<APawn>(OtherActor))
+	if (Cast<APawn>(OtherActor))
 	{
 		SetActorTickEnabled(true); // 玩家进入范围开启Tick
 		UE_LOG(LogTemp, Warning, TEXT("[CoinActor] 玩家靠近，开始旋转"));
@@ -104,7 +106,7 @@ void ACoinActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 void ACoinActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex)
 {
-	if (OtherActor && OtherActor != this && Cast<APawn>(OtherActor))
+	if (Cast<APawn>(OtherActor))
 	{
 		SetActorTickEnabled(false);
 		UE_LOG(LogTemp, Warning, TEXT("[CoinActor] 玩家离开，停止旋转"));
