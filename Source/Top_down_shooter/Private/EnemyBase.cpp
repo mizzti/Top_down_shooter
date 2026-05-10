@@ -7,7 +7,7 @@
 AEnemyBase::AEnemyBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -30,5 +30,14 @@ void AEnemyBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+float AEnemyBase::TakeDamage(float DamageAccount, const FDamageEvent& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	float ActualDamage = Super::TakeDamage(DamageAccount, DamageEvent, EventInstigator, DamageCauser);
+	UE_LOG(LogTemp, Warning,  TEXT("[EnemyBase] %s 受到 %.1f 点伤害，来自 %s"), 
+		*this->GetName(), ActualDamage, DamageCauser ? *DamageCauser->GetName() : TEXT("unknow"));
+	return ActualDamage;
 }
 

@@ -49,4 +49,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Bullet")
 	float LifeSpan = 3.0f;
 	
+	// 碰撞函数
+	UFUNCTION()
+	void OnHit(
+		UPrimitiveComponent* HitComp,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		FVector NormalImpulse,
+		const FHitResult& Hit
+		);
 };

@@ -26,5 +26,10 @@ public:
 	// Called to bind functionality to input
 	// 敌人会交给AI控制所以该组件（把玩家输入与该character连接起来）不会用上
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
+	virtual float TakeDamage(
+			float DamageAccount,
+			const FDamageEvent& DamageEvent,
+			AController* EventInstigator,
+			AActor* DamageCauser) override;
 };

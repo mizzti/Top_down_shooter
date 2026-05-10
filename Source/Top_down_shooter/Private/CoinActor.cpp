@@ -63,6 +63,7 @@ void ACoinActor::BeginPlay()
 	float RandomYaw = FMath::RandRange(0.0f, 360.0f);
 	SetActorRotation(FRotator(0.0f, RandomYaw, 0.0f));
 	
+	// 绑定回调函数
 	if (RotationTriggerComp)
 	{
 		RotationTriggerComp->OnComponentBeginOverlap.AddDynamic(this, &ACoinActor::OnOverlapBegin);
@@ -74,7 +75,7 @@ void ACoinActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	
-	UE_LOG(LogTemp, Warning, TEXT("CoinActor EndPlay, Reason: %d"), EndPlayReason);
+	// UE_LOG(LogTemp, Warning, TEXT("CoinActor EndPlay, Reason: %d"), EndPlayReason);
 }
 
 // Called every frame
@@ -88,7 +89,7 @@ void ACoinActor::OnPickup_Implementation(AActor* Picker)
 {
 	if (Cast<APawn>(Picker))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("CoinActor: %s OnPickup函数被调用, value = %d"), *Picker->GetName(), CoinValue);
+		// UE_LOG(LogTemp, Warning, TEXT("CoinActor: %s OnPickup函数被调用, value = %d"), *Picker->GetName(), CoinValue);
 		Destroy();// 拾取后被销毁
 	}
 }
@@ -99,7 +100,7 @@ void ACoinActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 	if (Cast<APawn>(OtherActor))
 	{
 		SetActorTickEnabled(true); // 玩家进入范围开启Tick
-		UE_LOG(LogTemp, Warning, TEXT("[CoinActor] 玩家靠近，开始旋转"));
+		// UE_LOG(LogTemp, Warning, TEXT("[CoinActor] 玩家靠近，开始旋转"));
 	}
 }
 
@@ -109,7 +110,7 @@ void ACoinActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Other
 	if (Cast<APawn>(OtherActor))
 	{
 		SetActorTickEnabled(false);
-		UE_LOG(LogTemp, Warning, TEXT("[CoinActor] 玩家离开，停止旋转"));
+		// UE_LOG(LogTemp, Warning, TEXT("[CoinActor] 玩家离开，停止旋转"));
 	}
 }
 
