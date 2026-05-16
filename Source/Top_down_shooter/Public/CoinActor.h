@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "CoinActor.generated.h"
 
+#define COLLISION_PLAYER ECC_GameTraceChannel1
+
 UCLASS(Blueprintable, BlueprintType)
 class TOP_DOWN_SHOOTER_API ACoinActor : public AActor // ue自动加上前缀
 {
@@ -45,6 +47,17 @@ public:
 	
 	virtual void OnPickup_Implementation(AActor* Picker); // 代码使用
 	
+	// 拾取绑定的回调函数
+	UFUNCTION()
+	void OnSphereOverlap(
+		UPrimitiveComponent* OverlappedComp,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComponent,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+	
+	// 旋转组件绑定的回调函数
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
 						AActor* OtherActor,

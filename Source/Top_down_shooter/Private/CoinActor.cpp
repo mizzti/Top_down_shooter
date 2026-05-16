@@ -19,6 +19,7 @@ ACoinActor::ACoinActor()
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComp"));
 	CollisionComp->SetSphereRadius(40.0f);
 	
+	CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionComp->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	// 单独设置重叠响应
 	// 设置对象类型为 WorldDynamic
@@ -27,7 +28,7 @@ ACoinActor::ACoinActor()
 	CollisionComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	// 单独对 Pawn 通道设置 Overlap
 	CollisionComp->SetCollisionResponseToChannel(
-		ECC_GameTraceChannel1,
+		COLLISION_PLAYER, // .h : #define COLLISION_PLAYER ECC_GameTraceChannel1
 		ECR_Overlap
 	);
 	
@@ -38,9 +39,10 @@ ACoinActor::ACoinActor()
 	RotationTriggerComp->SetSphereRadius(150.0f);
 	
 	// 单独设置重叠响应通道
+	RotationTriggerComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	RotationTriggerComp->SetCollisionObjectType(ECC_WorldDynamic);
 	RotationTriggerComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-	RotationTriggerComp->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Overlap);
+	RotationTriggerComp->SetCollisionResponseToChannel(COLLISION_PLAYER, ECR_Overlap);
 	
 	RotationTriggerComp->SetupAttachment(CollisionComp);
 	
@@ -62,6 +64,10 @@ void ACoinActor::BeginPlay()
 	// 随机初始朝向（只随机 Yaw 轴，绕Z轴转）
 	float RandomYaw = FMath::RandRange(0.0f, 360.0f);
 	SetActorRotation(FRotator(0.0f, RandomYaw, 0.0f));
+	if (CollisionComp)
+	{
+		CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &ACoinActor::OnSphereOverlap);
+	}
 	
 	// 绑定回调函数
 	if (RotationTriggerComp)
@@ -87,15 +93,21 @@ void ACoinActor::Tick(float DeltaTime)
 
 void ACoinActor::OnPickup_Implementation(AActor* Picker)
 {
-	if (Cast<APawn>(Picker))
+	if (APawn* PickerPawn = Cast<APawn>(Picker))
 	{
-		// UE_LOG(LogTemp, Warning, TEXT("CoinActor: %s OnPickup函数被调用, value = %d"), *Picker->GetName(), CoinValue);
+		UE_LOG(LogTemp, Warning, TEXT("CoinActor: %s OnPickup函数被调用, value = %d"), *PickerPawn->GetName(), CoinValue);
 		Destroy();// 拾取后被销毁
 	}
 }
 
-void ACoinActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+void ACoinActor::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	OnPickup(OtherActor);
+}
+
+void ACoinActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+                                UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (Cast<APawn>(OtherActor))
 	{
